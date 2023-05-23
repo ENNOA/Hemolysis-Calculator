@@ -1,5 +1,5 @@
 /*
- * Jaison Eccleston	15-May-2023
+ * Jaison Eccleston	23-May-2023
  * Contains static variables for PDF tables, page size, document, and font size/style
  * Contains method to generate new file names to prevent overwriting
  * Contains getter methods to get data from 3D lists and place then in appropriate table cells 
@@ -9,6 +9,7 @@
  */
 
 package hemolysis_V4;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -34,16 +35,16 @@ import com.itextpdf.layout.properties.TabAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 
 public class PdfGenerator {
-	
-	//declare PDF, File, and String objects
+
+	// declare PDF, File, and String objects
 	private static PdfWriter PdfWriter;
 	private static PdfDocument pdfDocument;
 	private static Document document;
 	private static File file;
 	private static String fileName;
 
-	//constants
-	private static final String LOCATION = ("D:\\WLData\\Hemolysis Results");
+	// constants
+	private static final String LOCATION = ("C:\\Users\\jaison.eccleston\\eclipse-workspace\\Hemolysis Calculator2");
 	private static final float FONTSIZESMALL = 8f;
 	private static final float FONTSIZEMID = 10f;
 	private static final float FONTSIZELARGE = 12f;
@@ -51,24 +52,30 @@ public class PdfGenerator {
 	private static Style mid;
 	private static Style large;
 	private static Style lambda;
-	
+
 	//
-	private static final UnitValue[] COL4 = UnitValue.createPercentArray(new float[] {25, 25, 25, 25});
-	private static final UnitValue[] COL2 = UnitValue.createPercentArray(new float[] {50, 50});
-	private static final UnitValue[] COL = UnitValue.createPercentArray(new float[] {100});
-	
-	//sets the tables with the specified COLumn widths
+	private static final UnitValue[] COL4 = UnitValue.createPercentArray(new float[] { 25, 25, 25, 25 });
+	private static final UnitValue[] COL2 = UnitValue.createPercentArray(new float[] { 50, 50 });
+	private static final UnitValue[] COL = UnitValue.createPercentArray(new float[] { 100 });
+
+	// sets the tables with the specified COLumn widths
 	private static Table header1 = new Table(COL);
 	private static Table header2 = new Table(COL);
-	private static Table specInfo1 = new Table (COL2);
-	private static Table specInfo2 = new Table (COL2);
+	private static Table specInfo1 = new Table(COL2);
+	private static Table specInfo2 = new Table(COL2);
 	private static Table data1 = new Table(COL4);
 	private static Table data2 = new Table(COL4);
 	private static Table run1Calc = new Table(COL);
 	private static Table run2Calc = new Table(COL);
-	private static Table avg =new Table(COL);
+	private static Table avg = new Table(COL);
+	
+	private GUI gui;
+	
+	public PdfGenerator (GUI gui) {
+		this.gui = gui;
+	}
 
-	//creates new font objects for each loop of the program
+	// creates new font objects for each loop of the program
 	public static void setPdfGenerator() throws IOException {
 		PdfFont symbol = PdfFontFactory.createFont(StandardFonts.SYMBOL);
 		PdfFont courier = PdfFontFactory.createFont(StandardFonts.COURIER);
@@ -78,21 +85,21 @@ public class PdfGenerator {
 		PdfGenerator.lambda = new Style().setFont(symbol);
 		PdfGenerator.fileName = FileNamer();
 	}
-	
-	
-	//method to create and populate pdf
-	public static void GeneratePDF(String[] GDP, List<List<List<String>>> records, String[] results, int runs) throws IOException {
+
+	// method to create and populate pdf
+	public static void GeneratePDF(String[] GDP, List<List<List<String>>> records, String[] results, int runs, GUI gui)
+			throws IOException {
 		setPdfGenerator();
-		
+
 		file = new File(LOCATION, fileName);
 		PdfWriter = new PdfWriter(file);
 		pdfDocument = new PdfDocument(PdfWriter);
 		document = new Document(pdfDocument);
-		
-		if (runs==2) {
-			//page 1
+
+		if (runs == 2) {
+			// page 1
 			header1 = getHeader(GDP, 0);
-			header2= getHeader(GDP, 1);
+			header2 = getHeader(GDP, 1);
 			specInfo1 = getSpecInfo(records, 0);
 			specInfo2 = getSpecInfo(records, 1);
 			data1 = getData(records, 0);
@@ -103,15 +110,15 @@ public class PdfGenerator {
 			TwoTables(document);
 			getFooter(document);
 		}
-		
-		else if (runs==3) {
-			//page 1
-			header1= getHeader(GDP, 0);
+
+		else if (runs == 3) {
+			// page 1
+			header1 = getHeader(GDP, 0);
 			specInfo1 = (getSpecInfo(records, 0));
 			data1 = getData(records, 0);
 			OneTable(document);
-			
-			//page 2
+
+			// page 2
 			document.add(new AreaBreak());
 			header1 = getHeader(GDP, 1);
 			header2 = getHeader(GDP, 2);
@@ -126,9 +133,9 @@ public class PdfGenerator {
 			getFooter(document);
 
 		}
-		
-		else if (runs==4) {
-			//page 1
+
+		else if (runs == 4) {
+			// page 1
 			header1 = getHeader(GDP, 0);
 			header2 = getHeader(GDP, 1);
 			specInfo1 = getSpecInfo(records, 0);
@@ -136,11 +143,11 @@ public class PdfGenerator {
 			data1 = getData(records, 0);
 			data2 = getData(records, 1);
 			TwoTables(document);
-			
-			//page 2
+
+			// page 2
 			document.add(new AreaBreak());
-			header1  = getHeader(GDP, 2);
-			header2  = getHeader(GDP, 3);
+			header1 = getHeader(GDP, 2);
+			header2 = getHeader(GDP, 3);
 			specInfo1 = getSpecInfo(records, 2);
 			specInfo2 = getSpecInfo(records, 3);
 			data1 = getData(records, 2);
@@ -151,15 +158,15 @@ public class PdfGenerator {
 			TwoTables(document);
 			getFooter(document);
 		}
-		
+
 		else {
-			//page 1
+			// page 1
 			header1 = getHeader(GDP, 0);
 			specInfo1 = getSpecInfo(records, 0);
 			data1 = getData(records, 0);
 			OneTable(document);
-			
-			//page 2
+
+			// page 2
 			document.add(new AreaBreak());
 			header1 = getHeader(GDP, 1);
 			header2 = getHeader(GDP, 2);
@@ -168,8 +175,8 @@ public class PdfGenerator {
 			data1 = getData(records, 1);
 			data2 = getData(records, 2);
 			TwoTables(document);
-			
-			//page 3
+
+			// page 3
 			document.add(new AreaBreak());
 			header1 = getHeader(GDP, 3);
 			header2 = getHeader(GDP, 4);
@@ -182,67 +189,68 @@ public class PdfGenerator {
 			avg = getAverage(results);
 			TwoTables(document);
 			getFooter(document);
-			
+
 		}
-		
+
 		document.close();
-				
-	
-		System.out.println("\nCreating PDF file named "+fileName+"...");
-		
+
+		gui.displayPrompt("\nCreating PDF file named " + fileName + "...");
+
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("\n\nDone.\n");
-		System.out.println(fileName+" can be found in \"C:\\Users\\jaison.eccleston\\eclipse-workspace\\Hemolysis Calculator2\\hemolysis results.\n");
+		gui.displayPrompt("\n\nDone.\n");
+		gui.displayPrompt(fileName
+				+ " can be found in \"C:\\Users\\jaison.eccleston\\eclipse-workspace\\Hemolysis Calculator2\\hemolysis results.\n");
 	}
-	
-	/* method to generate a name for the PDF by checking other files in the folder
-	 * returns String "Hemolysis Results" with a number  
-	 * should this be changed to Hemolysis Results" and then pull the sample time from the csv?
+
+	/*
+	 * method to generate a name for the PDF by checking other files in the folder
+	 * returns String "Hemolysis Results" with a number should this be changed to
+	 * Hemolysis Results" and then pull the sample time from the csv?
 	 */
 	public static String FileNamer() {
 		String filename = null;
 		File WLData = new File(LOCATION);
-		
+
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File WLData, String type) {
 				return type.endsWith(".pdf");
 			}
 		};
-		
+
 		// create array and arrange oldest first
 		File[] listOfFiles = WLData.listFiles(filter);
 		Arrays.sort(listOfFiles, Comparator.comparingLong(File::lastModified));
-		filename = "Hemolysis Results"+(listOfFiles.length+1)+".pdf";
-		
-		//checks for name duplicates and increments to avoid overwriting
-		for (int i=0; i<listOfFiles.length; i++) {
-			if(listOfFiles[i].getName().equals(filename)) 
-				filename = "Hemolysis Results"+(i+1)+".pdf";
-			}
+		filename = "Hemolysis Results" + (listOfFiles.length + 1) + ".pdf";
+
+		// checks for name duplicates and increments to avoid overwriting
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].getName().equals(filename))
+				filename = "Hemolysis Results" + (i + 1) + ".pdf";
+		}
 		return filename;
 	}
-	
-	//Method to create header table for the PDF
+
+	// Method to create header table for the PDF
 	public static Table getHeader(String[] header, int x) {
 		Table GDP = new Table(COL);
 		Text t0 = new Text(header[x]);
 		GDP.addCell(new Cell().add(new Paragraph(t0))).addStyle(mid);
 		return GDP;
 	}
-	
-	//method to generate the average Hb Free table for the PDF
+
+	// method to generate the average Hb Free table for the PDF
 	public static Table getAverage(String[] calc) {
 		Table HbFreeAvg = new Table(COL);
 		Cell cell1 = new Cell().setBorder(Border.NO_BORDER);
 		Paragraph HBFreeAvg = new Paragraph().addStyle(large);
 		HBFreeAvg.addTabStops(new TabStop(75f, TabAlignment.LEFT));
 		Text t0 = new Text("Average HbFree = (Run 1+ Run 2)/2)\n");
-		Text t1 = new Text("= "+calc[6]);
+		Text t1 = new Text("= " + calc[6]);
 		Text t2 = new Text(" mg").setTextRise(1).setFontSize(FONTSIZESMALL);
 		Text t3 = new Text("/");
 		Text t4 = new Text("dL").setTextRise(-1).setFontSize(FONTSIZESMALL);
@@ -252,28 +260,30 @@ public class PdfGenerator {
 		HbFreeAvg.addCell(cell1.add(HBFreeAvg)).setBorder(Border.NO_BORDER);
 		return HbFreeAvg;
 	}
-	
-	//Method to generate the calculations table for PDF
-	public static Table getCalculations(String[] calc, int x, int y, int z, boolean run2) throws IOException, PdfException {
+
+	// Method to generate the calculations table for PDF
+	public static Table getCalculations(String[] calc, int x, int y, int z, boolean run2)
+			throws IOException, PdfException {
 		Table hbfree = new Table(COL);
-		Cell cell1 = new Cell().setBorder(Border.NO_BORDER);;
+		Cell cell1 = new Cell().setBorder(Border.NO_BORDER);
+		;
 		Paragraph FreeHemo = new Paragraph().addStyle(large);
 		FreeHemo.addTabStops(new TabStop(35f, TabAlignment.LEFT));
 		Text t1 = new Text("Hb");
 		Text t2 = new Text("Free").setTextRise(-1).addStyle(mid);
 		Text t3 = new Text(" = [DFx(");
-		Text t4 = new Text("l").addStyle(lambda);//prints the lambda character
+		Text t4 = new Text("l").addStyle(lambda);// prints the lambda character
 		Text t5 = new Text("578").setTextRise(-1).addStyle(small);
-		Text t6 = new Text("-l").addStyle(lambda);//prints the lambda character
+		Text t6 = new Text("-l").addStyle(lambda);// prints the lambda character
 		Text t7 = new Text("700").setTextRise(-1).addStyle(small);
 		Text t8 = new Text(")x113]-0.4\n");
-		Text t9 = new Text(("= ["+calc[7]+"x("+calc[x]+"-"+calc[y]+")x113]-0.4\n"));
-		Text t10 = new Text("Run 1 =  "+calc[z]);
+		Text t9 = new Text(("= [" + calc[7] + "x(" + calc[x] + "-" + calc[y] + ")x113]-0.4\n"));
+		Text t10 = new Text("Run 1 =  " + calc[z]);
 		Text t11 = new Text("mg").setTextRise(1).addStyle(small);
 		Text t12 = new Text("/");
 		Text t13 = new Text("dL").setTextRise(-1).addStyle(small);
-		if (run2==true) {
-			t10 = new Text("Run 2 =  "+calc[z]); 
+		if (run2 == true) {
+			t10 = new Text("Run 2 =  " + calc[z]);
 		}
 		FreeHemo.add(t1).add(t2).add(t3).add(t4).add(t5).add(t6).add(t7).add(t8);
 		FreeHemo.add(new Tab());
@@ -282,55 +292,57 @@ public class PdfGenerator {
 
 		return hbfree;
 	}
-	
-	//Method to generate table with Spec Information 
+
+	// Method to generate table with Spec Information
 	public static Table getSpecInfo(List<List<List<String>>> records, int x) {
-		Table spec = new Table (COL2);
-		for (int i=0; i<7; i++) {
+		Table spec = new Table(COL2);
+		for (int i = 0; i < 7; i++) {
 			String holder;
-			if (i==4)
-				i=6;
-			if (records.get(x).get(i).size()==1)
+			if (i == 4)
+				i = 6;
+			if (records.get(x).get(i).size() == 1)
 				holder = records.get(x).get(i).get(0);
-			else 
-				holder = records.get(x).get(i).get(0)+" "+records.get(x).get(i).get(1);
+			else
+				holder = records.get(x).get(i).get(0) + " " + records.get(x).get(i).get(1);
 			spec.addCell(new Cell().add(new Paragraph(holder))).addStyle(small);
 		}
 		spec.addCell(new Cell().setBorder(Border.NO_BORDER));// adds empty cell without border preserve table dimensions
 		return spec;
 	}
-	
-	//Method to generate wavelength data table 
+
+	// Method to generate wavelength data table
 	public static Table getData(List<List<List<String>>> records, int x) {
-		Table data = new Table (COL4);
-		for (int i=8; i<records.get(x).size(); i++) {
+		Table data = new Table(COL4);
+		for (int i = 8; i < records.get(x).size(); i++) {
 			data.addCell(new Cell().add(new Paragraph(records.get(x).get(i).get(0)))).addStyle(small);
 			data.addCell(new Cell().add(new Paragraph(records.get(x).get(i).get(1)))).addStyle(small);
-			if (i==8) {
+			if (i == 8) {
 				data.addCell(new Cell().add(new Paragraph(records.get(x).get(i).get(0)))).addStyle(small);
 				data.addCell(new Cell().add(new Paragraph(records.get(x).get(i).get(1)))).addStyle(small);
 			}
 		}
-		
+
 		return data;
 	}
-	
-	//Method to populate and position tables PDF for one sample
+
+	// Method to populate and position tables PDF for one sample
 	public static void OneTable(Document doc) {
-		//Set the absolute position of the lower left corner of each element. Page size is 545f by 842f
+		// Set the absolute position of the lower left corner of each element. Page size
+		// is 545f by 842f
 		header1.setFixedPosition(136, 806, 298);
 		specInfo1.setFixedPosition(136, 747, 298);
 		data1.setFixedPosition(136, 277, 298);
-		
-		//add elements to document
+
+		// add elements to document
 		doc.add(header1);
 		doc.add(specInfo1);
 		doc.add(data1);
 	}
-	
-	//Method to populate and position tables PDF for two sample
+
+	// Method to populate and position tables PDF for two sample
 	public static void TwoTables(Document doc) {
-		//Set the absolute position of the lower left corner of each element. Page size is 545f by 842f
+		// Set the absolute position of the lower left corner of each element. Page size
+		// is 545f by 842f
 		header1.setFixedPosition(30, 806, 250);
 		header2.setFixedPosition(320, 806, 250);
 		specInfo1.setFixedPosition(30, 737, 250);
@@ -339,9 +351,9 @@ public class PdfGenerator {
 		data2.setFixedPosition(320, 267, 250);
 		run1Calc.setFixedPosition(30, 192, 250);
 		run2Calc.setFixedPosition(320, 192, 250);
-		avg.setFixedPosition(160, 122, 290);	
-		
-		//add the documents to the page
+		avg.setFixedPosition(160, 122, 290);
+
+		// add the documents to the page
 		doc.add(header1);
 		doc.add(header2);
 		doc.add(specInfo1);
@@ -353,7 +365,7 @@ public class PdfGenerator {
 		doc.add(avg); // Borderless Cell so even if printed won't show
 	}
 
-	//Method to add and position Table at bottom of page of signature
+	// Method to add and position Table at bottom of page of signature
 	public static void getFooter(Document doc) {
 		Table footer = new Table(COL);
 		Cell cell = new Cell().setBorder(Border.NO_BORDER);

@@ -9,6 +9,7 @@ package hemolysis_V4;
 import java.util.InputMismatchException;
 
 public class Header {
+	@SuppressWarnings("unused")
 	private GUI gui;
 
 	public Header(GUI gui) {
@@ -33,7 +34,7 @@ public class Header {
 		String header3 = "";
 		String header4 = "";
 		String header5 = "";
-		String Sentinel = null;
+		String sentinel = null;
 		String[] GDP = new String[6];
 
 		// user inputs
@@ -48,16 +49,20 @@ public class Header {
 				} catch (InputMismatchException e) {
 					gui.displayPrompt("\nEntry must be a number.\n");
 					menu(gui);
-					// Driver.input.nextLine();
+					continueInput = false;
+				} catch (NumberFormatException e1) {
+					gui.displayPrompt("\nEntry must be a number.\n");
+					menu(gui);
 					continueInput = false;
 				}
+					
 			} while (!continueInput);
 
 			// Ensures user only enters integers between 1 and 6
-			if (choice > 0 && choice > 6) {
+			if (choice < 1 || choice > 6) {
 				gui.displayPrompt("\nInvalid entry. Try again\n");
 			}
-		} while (choice > 0 && choice > 6);
+		} while (choice < 1 || choice > 6);
 		Driver.consoleSpacer(1);
 
 		// do-while loop to allow user check if information is correct
@@ -228,7 +233,7 @@ public class Header {
 
 			// if statements to check if the extra headers are correct and to assign to
 			// headerSend
-			Driver.consoleSpacer(1);
+//			Driver.consoleSpacer(1);
 			if (runs == 2) {
 				gui.displayPrompt("\nHeader for run 1: " + header1);
 				gui.displayPrompt("\nHeader for run 2: " + header2);
@@ -269,18 +274,14 @@ public class Header {
 				GDP[4] = header5;
 			}
 
-			gui.displayPrompt("\nIs the header information correct? Y/N  ");
+			gui.displayPrompt("\n\nIs the header information correct? Y/N  ");
 			do {
-				try {
-					Sentinel = gui.getStringInput();
-					continueInput = true;
-				} catch (InputMismatchException ex) {
-					gui.displayPrompt("\nTry again. Input must be an whole number.");
-					// Driver.input.nextLine();
-					continueInput = false;
-				}
-			} while (!continueInput);
-		} while (!Sentinel.equalsIgnoreCase("y"));
+				sentinel = gui.getStringInput();
+				if (!Driver.verify(sentinel))
+					gui.displayPrompt("\nInvalid input. Enter Y or N");
+			} while (!Driver.verify(sentinel));
+
+		} while (sentinel.equalsIgnoreCase("N"));;
 
 		return GDP;
 	}
@@ -301,7 +302,7 @@ public class Header {
 		gui.displayPrompt("\n----------------------------------------------------------------------");
 		gui.displayPrompt("\n1 = Blood Preparation (whole blood)\t 2 = Blood Preparation (plasma)"
 				+         "\n3 = Initial Hemolysis\t\t" + " 4 = Sample\n" + "5 = In-Vivo\t\t\t 6 = Setpoint");
-		gui.displayPrompt("\nAre these results for blood preparation, sample, setpoint, or In-Vivo? ");
+		gui.displayPrompt("\n\nAre these results for blood preparation, sample, setpoint, or In-Vivo? ");
 	}
 
 }

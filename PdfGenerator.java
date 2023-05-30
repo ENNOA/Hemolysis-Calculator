@@ -10,10 +10,13 @@
 
 package hemolysis_V4;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.exceptions.PdfException;
@@ -44,7 +47,8 @@ public class PdfGenerator {
 	private static String fileName;
 
 	// constants
-	private static final String LOCATION = ("C:\\Users\\jaison.eccleston\\eclipse-workspace\\Hemolysis Calculator2");
+	private static final String DIRECTORY = System.getProperty("user.dir");
+	private static final String LOCATION = DIRECTORY+File.separator+"Hemolysis Results";
 	private static final float FONTSIZESMALL = 8f;
 	private static final float FONTSIZEMID = 10f;
 	private static final float FONTSIZELARGE = 12f;
@@ -53,7 +57,7 @@ public class PdfGenerator {
 	private static Style large;
 	private static Style lambda;
 
-	//
+	// constants for the size of the table columns
 	private static final UnitValue[] COL4 = UnitValue.createPercentArray(new float[] { 25, 25, 25, 25 });
 	private static final UnitValue[] COL2 = UnitValue.createPercentArray(new float[] { 50, 50 });
 	private static final UnitValue[] COL = UnitValue.createPercentArray(new float[] { 100 });
@@ -69,7 +73,8 @@ public class PdfGenerator {
 	private static Table run2Calc = new Table(COL);
 	private static Table avg = new Table(COL);
 	
-	private GUI gui;
+	@SuppressWarnings("unused")
+	private  GUI gui;
 	
 	public PdfGenerator (GUI gui) {
 		this.gui = gui;
@@ -90,7 +95,6 @@ public class PdfGenerator {
 	public static void GeneratePDF(String[] GDP, List<List<List<String>>> records, String[] results, int runs, GUI gui)
 			throws IOException {
 		setPdfGenerator();
-
 		file = new File(LOCATION, fileName);
 		PdfWriter = new PdfWriter(file);
 		pdfDocument = new PdfDocument(PdfWriter);
@@ -204,7 +208,7 @@ public class PdfGenerator {
 
 		gui.displayPrompt("\n\nDone.\n");
 		gui.displayPrompt(fileName
-				+ " can be found in \"C:\\Users\\jaison.eccleston\\eclipse-workspace\\Hemolysis Calculator2\\hemolysis results.\n");
+				+ " can be found in "+LOCATION+"\\hemolysis results.\n");
 	}
 
 	/*
@@ -213,9 +217,9 @@ public class PdfGenerator {
 	 * Hemolysis Results" and then pull the sample time from the csv?
 	 */
 	public static String FileNamer() {
+		System.out.println(LOCATION);
 		String filename = null;
 		File WLData = new File(LOCATION);
-
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File WLData, String type) {
 				return type.endsWith(".pdf");
@@ -224,6 +228,9 @@ public class PdfGenerator {
 
 		// create array and arrange oldest first
 		File[] listOfFiles = WLData.listFiles(filter);
+	    listOfFiles = Arrays.stream(listOfFiles)
+	            .filter(Objects::nonNull)
+	            .toArray(File[]::new);
 		Arrays.sort(listOfFiles, Comparator.comparingLong(File::lastModified));
 		filename = "Hemolysis Results" + (listOfFiles.length + 1) + ".pdf";
 

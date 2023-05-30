@@ -1,27 +1,44 @@
+/*Jaison Eccleston 24-May-2023
+ * Class to build a gui for the user
+ * uses dialog boxes and input fields to take user information
+ * contains methods
+ * 
+ */
+
 package hemolysis_V4;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 public class GUI {
-	private JFrame frame;
+	private static JFrame frame;
 	private JPanel topPanel;
-	private JPanel bottomPanel;
+	private JPanel rightPanel;
 	private JTextArea textArea;
-	private JTextField inputField;
-	private JButton submit;
+	private static ImageIcon TypeO;
 
 	public GUI() {
 		frame = new JFrame("Hemolysis Calculator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 
 		// Create the top panel
 		topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
+		
+		// Create the right panel
+		rightPanel = new JPanel();
+		rightPanel.setLayout(new BorderLayout());
+		
 
 		// Create the text area and add it to the top panel
 		textArea = new JTextArea();
@@ -29,105 +46,84 @@ public class GUI {
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		topPanel.add(scrollPane, BorderLayout.CENTER);
 
-		// Create the bottom panel
-		bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BorderLayout());
-
-		// Create the input field and add it to the bottom panel
-		inputField = new JTextField();
-		bottomPanel.add(inputField, BorderLayout.CENTER);
-
-		// Create the button and add it to the bottom panel
-		submit = new JButton("Submit");
-		bottomPanel.add(submit, BorderLayout.EAST);
-
 		// Add the panels to the frame
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add(topPanel, BorderLayout.CENTER);
-		frame.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		frame.getContentPane().add(rightPanel, BorderLayout.EAST);
 
-		// Add action listener to the button
-		submit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addInputToList();
-			}
-		});
-
-		// Add key listener to the input field
-		inputField.addKeyListener(new KeyListener() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					addInputToList();
-				}
-			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-			}
-		});
-
-		// Set the frame size and make it visible
-		ImageIcon blood = new ImageIcon(
-				"C:\\Users\\jaison.eccleston\\eclipse-workspace\\Hemolysis Calculator2\\src\\hemolysis_V4\\TypeO.jpg");
-		frame.setIconImage(blood.getImage());
-		frame.setSize(900, 500);
+		// Set the frame size, make it visible, set icon image, and window listener
+		TypeO = new ImageIcon("TypeO.jpg");
+		frame.setIconImage(TypeO.getImage());
+		frame.setSize(900, 650);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
 	}
 
-	private void addInputToList() {
-		String input = inputField.getText();
-		parseInput(input);
-		textArea.append(input + "\n");
-		inputField.setText("");
-	}
+
 
 	public void displayPrompt(String prompt) {
 		textArea.append(prompt);
 	}
 
-//	public int getIntegerInput() {
-//        while (inputField.getText().isEmpty()) {
-//            try {
-//                Thread.sleep(100); // Wait for 100 milliseconds
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        String input = inputField.getText();
-//        try {
-//            return Integer.parseInt(input);
-//        } catch (NumberFormatException e) {
-//            // Handle invalid input
-//            return 0; // Return a default value or handle the error case as needed
-//        }
-//    }
-
 	public int getIntegerInput() {
-		String input = JOptionPane.showInputDialog(frame, "Enter an integer");
+		String input = getUserInput();
+			if (input.equals("")) {
+				DontCallMeShirley();
+			}
+
+			else if (input.equals(null)) {
+				DontCallMeShirley();
+			}
+			
+//			else if (!Header.isInt(input)) {
+//				textArea.append(" " + input + "\n");
+//			}
+
 		textArea.append(" " + input + "\n");
 		return Integer.parseInt(input);
 	}
 
+	public void DontCallMeShirley() {
+		JDialog.setDefaultLookAndFeelDecorated(true);
+		int response = JOptionPane.showConfirmDialog(null, "Do you want to continue?", "Confirm",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+		if (response == JOptionPane.NO_OPTION) {
+			System.exit(0);
+		} else if (response == JOptionPane.YES_OPTION) {
+			textArea.append("\n  --Resuming program--   \n");
+		} else if (response == JOptionPane.CLOSED_OPTION) {
+			System.exit(0);
+		}
+	}
+
 	public String getStringInput() {
-		String input = JOptionPane.showInputDialog(frame, "Enter a string");
+		String input = getUserInput();
+		if (input.equals("")) {
+			DontCallMeShirley();
+		} else if (input.equals(null)) {
+			DontCallMeShirley();
+		}
 		textArea.append(" " + input + "\n");
 		return input;
 	}
 
-	private Object parseInput(String input) {
-		try {
-			return Integer.parseInt(input);
-		} catch (NumberFormatException e) {
-			return input;
-		}
+	// Getter for UserInput
+	public String getUserInput() {
+		JOptionPane optionPane = new JOptionPane("Enter an integer", JOptionPane.PLAIN_MESSAGE,
+				JOptionPane.DEFAULT_OPTION, null, null);
+		optionPane.setWantsInput(true);
+		JDialog dialog = optionPane.createDialog(null, "Input");
+		dialog.setLocationRelativeTo(rightPanel);
+		dialog.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				DontCallMeShirley();
+			}
+		});
+		dialog.setVisible(true);
+		String input = (String) optionPane.getInputValue();
+		return input;
 	}
 
 	public static void main(String[] args) {
@@ -137,4 +133,10 @@ public class GUI {
 			}
 		});
 	}
+
+	// Getter for the JTextArea
+	public JTextArea getTextArea() {
+		return textArea;
+	}
+	
 }

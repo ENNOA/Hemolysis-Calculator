@@ -1,7 +1,7 @@
 /*
  * Jaison Eccleston	24-May-2023
- *Driver class. 
- *Contains methods to get file names, and console formatting. 
+ *Driver class.
+ *Contains methods to get file names, and console formatting.
  *Takes user inputs to determine number of files and dilution factor, then sends
  * to other classes for processing.
  *Contains try/catch to ensure user does not input invalid entries.
@@ -28,6 +28,7 @@ public class Driver {
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				boolean continueInput = true;
 				int DF = 1;
@@ -54,7 +55,7 @@ public class Driver {
 						} catch (NumberFormatException e1) {
 							gui.displayPrompt("\n Input must be an whole number.");
 							gui.getTextArea().repaint();
-						} 
+						}
 					} while (continueInput);
 					continueInput=true;//reset continueInput
 
@@ -93,7 +94,7 @@ public class Driver {
 						} catch (InputMismatchException ex) {
 							gui.displayPrompt("\nInput Mistmatch. Input must be an whole number.");
 							gui.getTextArea().repaint();
-							
+
 						} catch (NumberFormatException e1) {
 							gui.displayPrompt("\n Number Format. Input must be an whole number.");
 							gui.getTextArea().repaint();
@@ -164,15 +165,15 @@ public class Driver {
 								gui.displayPrompt("\n\n"+e1+"\n\nIOException: I Dunno, lol lmao");
 								sentinel = gui.getStringInput();
 							}
-						
+
 					} while (sentinel.equalsIgnoreCase("ok"));
-					
+
 					gui.displayPrompt(
 							"\n\nAre there more files to parse? Press Y to run the program again with new files. Previous files will not be overwritten.");
 					sentinel = gui.getStringInput();
 					
 				} while (sentinel.equalsIgnoreCase("Y"));
-
+				openFolder();
 				System.exit(0);
 			}
 		});
@@ -186,6 +187,7 @@ public class Driver {
 	public static File[] Files() {
 		File WLData = new File(DIRECTORY);
 		FilenameFilter filter = new FilenameFilter() {
+			@Override
 			public boolean accept(File WLData, String type) {
 				return type.endsWith(".csv");
 			}
@@ -206,10 +208,10 @@ public class Driver {
 
 		return listOfFiles;
 	}
-	
+
 	//Open folder for the user
 	public static void openFolder() {
-		String folderPath = "DIRECTORY"+File.separator+"Hemolysis Results";
+		String folderPath = DIRECTORY+File.separator+"Hemolysis Results";
         File folder = new File(folderPath);
         if (folder.exists()) {
             try {
@@ -228,7 +230,8 @@ public class Driver {
 			gui.displayPrompt("\n");
 		}
 	}
-
+	
+	// ensure the user only enters Y or N
 	public static boolean verify(String sentinel) {
 		if (sentinel.equalsIgnoreCase("y"))
 			return true;
@@ -236,5 +239,5 @@ public class Driver {
 			return true;
 		return false;
 	}
-	
+
 }

@@ -2,7 +2,7 @@
  * Jaison Eccleston	23-May-2023
  * Contains static variables for PDF tables, page size, document, and font size/style
  * Contains method to generate new file names to prevent overwriting
- * Contains getter methods to get data from 3D lists and place then in appropriate table cells 
+ * Contains getter methods to get data from 3D lists and place then in appropriate table cells
  * Contains methods to set absolute positions for the tables on the pdf page
  * Class to take the strings and lists returned from COLlector and build a PDF file to be printed out and logged.
  * Ensures that the files are not overwritten
@@ -48,7 +48,7 @@ public class PdfGenerator {
 
 	// constants
 	private static final String DIRECTORY = System.getProperty("user.dir");
-	private static final String LOCATION = DIRECTORY+File.separator+"Hemolysis Results";
+	private static final String LOCATION = DIRECTORY + File.separator + "Hemolysis Results";
 	private static final float FONTSIZESMALL = 8f;
 	private static final float FONTSIZEMID = 10f;
 	private static final float FONTSIZELARGE = 12f;
@@ -72,11 +72,13 @@ public class PdfGenerator {
 	private static Table run1Calc = new Table(COL);
 	private static Table run2Calc = new Table(COL);
 	private static Table avg = new Table(COL);
-	
+
+	// This must be here for the program to work
 	@SuppressWarnings("unused")
-	private  GUI gui;
-	
-	public PdfGenerator (GUI gui) {
+	private GUI gui;
+
+	//Constructor  to initialize pdfGenerator  with reference to gui
+	public PdfGenerator(GUI gui) {
 		this.gui = gui;
 	}
 
@@ -207,8 +209,7 @@ public class PdfGenerator {
 		}
 
 		gui.displayPrompt("\n\nDone.\n");
-		gui.displayPrompt(fileName
-				+ " can be found in "+LOCATION+"\\hemolysis results.\n");
+		gui.displayPrompt(fileName + " can be found in " + LOCATION + "\\hemolysis results.\n");
 	}
 
 	/*
@@ -221,6 +222,7 @@ public class PdfGenerator {
 		String filename = null;
 		File WLData = new File(LOCATION);
 		FilenameFilter filter = new FilenameFilter() {
+			@Override
 			public boolean accept(File WLData, String type) {
 				return type.endsWith(".pdf");
 			}
@@ -228,9 +230,7 @@ public class PdfGenerator {
 
 		// create array and arrange oldest first
 		File[] listOfFiles = WLData.listFiles(filter);
-	    listOfFiles = Arrays.stream(listOfFiles)
-	            .filter(Objects::nonNull)
-	            .toArray(File[]::new);
+		listOfFiles = Arrays.stream(listOfFiles).filter(Objects::nonNull).toArray(File[]::new);
 		Arrays.sort(listOfFiles, Comparator.comparingLong(File::lastModified));
 		filename = "Hemolysis Results" + (listOfFiles.length + 1) + ".pdf";
 
@@ -273,7 +273,7 @@ public class PdfGenerator {
 			throws IOException, PdfException {
 		Table hbfree = new Table(COL);
 		Cell cell1 = new Cell().setBorder(Border.NO_BORDER);
-		;
+
 		Paragraph FreeHemo = new Paragraph().addStyle(large);
 		FreeHemo.addTabStops(new TabStop(35f, TabAlignment.LEFT));
 		Text t1 = new Text("Hb");
@@ -289,7 +289,7 @@ public class PdfGenerator {
 		Text t11 = new Text("mg").setTextRise(1).addStyle(small);
 		Text t12 = new Text("/");
 		Text t13 = new Text("dL").setTextRise(-1).addStyle(small);
-		if (run2 == true) {
+		if (run2) {
 			t10 = new Text("Run 2 =  " + calc[z]);
 		}
 		FreeHemo.add(t1).add(t2).add(t3).add(t4).add(t5).add(t6).add(t7).add(t8);

@@ -12,10 +12,12 @@ public class Header {
 	@SuppressWarnings("unused")
 	private GUI gui;
 
+	//Constructor  to initialize Header with reference to gui
 	public Header(GUI gui) {
 		this.gui = gui;
 	}
 
+	// generate the header information from user input
 	public static String[] header(int df, int runs1, GUI gui) {
 		// Header header = new Header(gui);
 
@@ -55,7 +57,7 @@ public class Header {
 					menu(gui);
 					continueInput = false;
 				}
-					
+
 			} while (!continueInput);
 
 			// Ensures user only enters integers between 1 and 6
@@ -281,7 +283,7 @@ public class Header {
 					gui.displayPrompt("\nInvalid input. Enter Y or N");
 			} while (!Driver.verify(sentinel));
 
-		} while (sentinel.equalsIgnoreCase("N"));;
+		} while (sentinel.equalsIgnoreCase("N"));
 
 		return GDP;
 	}
@@ -296,12 +298,13 @@ public class Header {
 		}
 	}
 
+	// display menu to gui text area
 	public static void menu(GUI gui) {
 		gui.displayPrompt("\n");
 		gui.displayPrompt("\n                       Header Generation                              ");
 		gui.displayPrompt("\n----------------------------------------------------------------------");
 		gui.displayPrompt("\n1 = Blood Preparation (whole blood)\t 2 = Blood Preparation (plasma)"
-				+         "\n3 = Initial Hemolysis\t\t" + " 4 = Sample\n" + "5 = In-Vivo\t\t\t 6 = Setpoint");
+				+ "\n3 = Initial Hemolysis\t\t" + " 4 = Sample\n" + "5 = In-Vivo\t\t\t 6 = Setpoint");
 		gui.displayPrompt("\n\nAre these results for blood preparation, sample, setpoint, or In-Vivo? ");
 	}
 

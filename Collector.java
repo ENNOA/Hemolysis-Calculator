@@ -83,8 +83,6 @@ public class Collector {
 			// send results to class for calculations
 			results = results(hemoLow1, hemoHigh1, hemoLow2, hemoHigh2, DF);
 
-			// fills array elements with Stringbuilders for sending to PdfGenerator
-
 			// send to PdfGenerator for printing
 			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gui);
 			break;
@@ -133,8 +131,6 @@ public class Collector {
 			// send results to class for calculations
 			results = results(hemoLow1, hemoHigh1, hemoLow2, hemoHigh2, DF);
 
-			// fills array elements with Stringbuilders for sending to PdfGenerator
-
 			// send to PdfGenerator for printing
 			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gui);
 			break;
@@ -171,6 +167,7 @@ public class Collector {
 		return value;
 	}
 
+	// calculates results passed from Collector class and returns String aray
 	static String[] results(double x1, double y1, double x2, double y2, int df) {
 		// declarations and variables
 		String X1 = String.format("%.3f", x1);
@@ -204,7 +201,8 @@ public class Collector {
 
 		return results;
 	}
-
+	
+	// rounds appropriately
 	private static double round(double value, int precision) {
 		int scale = (int) Math.pow(10, precision);
 		return (double) Math.round(value * scale) / scale;

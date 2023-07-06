@@ -1,11 +1,12 @@
 /*
- * Jaison Eccleston	23-May-2023
+ * Jaison Eccleston	06-JUL-2023
  * Contains static variables for PDF tables, page size, document, and font size/style
  * Contains method to generate new file names to prevent overwriting
  * Contains getter methods to get data from 3D lists and place then in appropriate table cells
  * Contains methods to set absolute positions for the tables on the pdf page
  * Class to take the strings and lists returned from COLlector and build a PDF file to be printed out and logged.
  * Ensures that the files are not overwritten
+ * Fixed Null Pointer Exception by ensuring  that if a folder is not found, it is created.
  */
 
 package hemolysis_V4;
@@ -218,9 +219,12 @@ public class PdfGenerator {
 	 * Hemolysis Results" and then pull the sample time from the csv?
 	 */
 	public static String FileNamer() {
-		System.out.println(LOCATION);
 		String filename = null;
 		File WLData = new File(LOCATION);
+		boolean resultsFolder = WLData.exists();
+		if (!resultsFolder) {
+			WLData.mkdir();
+		}
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File WLData, String type) {

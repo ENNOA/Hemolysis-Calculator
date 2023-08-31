@@ -4,21 +4,21 @@
  * Takes user input to generate the the title and blood information at the top of the pdf
  * Contains method to ensure user enters an integer
  */
-package hemolysis_V4;
+package hemolysis_V5;
 
 import java.util.InputMismatchException;
 
 public class Header {
 	@SuppressWarnings("unused")
-	private GUI gui;
+	private GUI_FrontEnd gUI_FrontEnd;
 
 	//Constructor  to initialize Header with reference to gui
-	public Header(GUI gui) {
-		this.gui = gui;
+	public Header(GUI_FrontEnd gUI_FrontEnd) {
+		this.gUI_FrontEnd = gUI_FrontEnd;
 	}
 
 	// generate the header information from user input
-	public static String[] header(int df, int runs1, GUI gui) {
+	public static String[] header(int df, int runs1, GUI_FrontEnd gUI_FrontEnd) {
 		// Header header = new Header(gui);
 
 		boolean continueInput;
@@ -41,20 +41,20 @@ public class Header {
 
 		// user inputs
 		do {
-			menu(gui);
+			menu(gUI_FrontEnd);
 
 			// loop with error handling to catch invalid inputs and allow user to try again
 			do {
 				try {
-					choice = gui.getIntegerInput();
+					choice = gUI_FrontEnd.getIntegerInput();
 					continueInput = true;
 				} catch (InputMismatchException e) {
-					gui.displayPrompt("\nEntry must be a number.\n");
-					menu(gui);
+					gUI_FrontEnd.displayPrompt("\nEntry must be a number.\n");
+					menu(gUI_FrontEnd);
 					continueInput = false;
 				} catch (NumberFormatException e1) {
-					gui.displayPrompt("\nEntry must be a number.\n");
-					menu(gui);
+					gUI_FrontEnd.displayPrompt("\nEntry must be a number.\n");
+					menu(gUI_FrontEnd);
 					continueInput = false;
 				}
 
@@ -62,7 +62,7 @@ public class Header {
 
 			// Ensures user only enters integers between 1 and 6
 			if (choice < 1 || choice > 6) {
-				gui.displayPrompt("\nInvalid entry. Try again\n");
+				gUI_FrontEnd.displayPrompt("\nInvalid entry. Try again\n");
 			}
 		} while (choice < 1 || choice > 6);
 		Driver.consoleSpacer(1);
@@ -72,61 +72,61 @@ public class Header {
 			// switch to determine which inputs are needed for the header
 			switch (choice) {
 			case 1:
-				gui.displayPrompt("\nBlood Receiving - Whole Blood\n-----------------------------");
-				gui.displayPrompt("\nEnter the lot number: ");
-				lot = gui.getStringInput();
-				gui.displayPrompt("\nEnter the unit number: ");
-				unit = gui.getStringInput();
-				gui.displayPrompt("\nEnter the time at which the sample was taken: ");
-				time = gui.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nBlood Receiving - Whole Blood\n-----------------------------");
+				gUI_FrontEnd.displayPrompt("\nEnter the lot number: ");
+				lot = gUI_FrontEnd.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nEnter the unit number: ");
+				unit = gUI_FrontEnd.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nEnter the time at which the sample was taken: ");
+				time = gUI_FrontEnd.getStringInput();
 				header1 = lot + " Unit #" + unit + " " + time + " " + hemo + " Run 1";
 				header2 = lot + " Unit #" + unit + " " + time + " " + hemo + " Run 2";
 				break;
 
 			case 2:
-				gui.displayPrompt("\nBlood Receiving - Plasma\n------------------------");
-				gui.displayPrompt("\nK+ testing? Enter Y/N: ");
-				K = gui.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nBlood Receiving - Plasma\n------------------------");
+				gUI_FrontEnd.displayPrompt("\nK+ testing? Enter Y/N: ");
+				K = gUI_FrontEnd.getStringInput();
 				if (K.equalsIgnoreCase("y")) {
-					gui.displayPrompt("\nEnter the lot number: ");
-					lot = gui.getStringInput();
-					gui.displayPrompt("\nEnter the unit number: ");
-					unit = gui.getStringInput();
-					gui.displayPrompt("\nEnter the time at which the sample was taken: ");
-					time = gui.getStringInput();
+					gUI_FrontEnd.displayPrompt("\nEnter the lot number: ");
+					lot = gUI_FrontEnd.getStringInput();
+					gUI_FrontEnd.displayPrompt("\nEnter the unit number: ");
+					unit = gUI_FrontEnd.getStringInput();
+					gUI_FrontEnd.displayPrompt("\nEnter the time at which the sample was taken: ");
+					time = gUI_FrontEnd.getStringInput();
 					header1 = lot + " Unit #" + unit + " " + time + " " + hemo + " Run 1";
 					header2 = lot + " Unit #" + unit + " " + time + " " + hemo + " Run 2";
 				}
 
 				else {
-					gui.displayPrompt("\nEnter the lot number: ");
-					lot = gui.getStringInput();
-					gui.displayPrompt("\nEnter the unit number: ");
-					unit = gui.getStringInput();
+					gUI_FrontEnd.displayPrompt("\nEnter the lot number: ");
+					lot = gUI_FrontEnd.getStringInput();
+					gUI_FrontEnd.displayPrompt("\nEnter the unit number: ");
+					unit = gUI_FrontEnd.getStringInput();
 					header1 = lot + " Unit #" + unit + " " + hemo + " Run 1";
 					header2 = lot + " Unit #" + unit + " " + hemo + " Run 2";
 				}
 				break;
 
 			case 3:
-				gui.displayPrompt("\nInitial Hemolysis\n-----------------");
-				gui.displayPrompt("\nEnter the time at which the sample was taken: ");
-				time = gui.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nInitial Hemolysis\n-----------------");
+				gUI_FrontEnd.displayPrompt("\nEnter the time at which the sample was taken: ");
+				time = gUI_FrontEnd.getStringInput();
 				header1 = init + time + " Run 1";
 				header2 = init + time + " Run 2";
 				break;
 
 			case 4:
-				gui.displayPrompt("\nSample\n------");
-				gui.displayPrompt("\nEnter the sample number: ");
+				gUI_FrontEnd.displayPrompt("\nSample\n------");
+				gUI_FrontEnd.displayPrompt("\nEnter the sample number: ");
 				do {
-					sample = gui.getStringInput();
+					sample = gUI_FrontEnd.getStringInput();
 					if (!isInt(sample)) {
-						gui.displayPrompt("\nInvalid Entry. \nEnter the sample number: ");
+						gUI_FrontEnd.displayPrompt("\nInvalid Entry. \nEnter the sample number: ");
 					}
 				} while (!isInt(sample));
-				gui.displayPrompt("\nEnter the time at which the sample was taken: ");
-				time = gui.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nEnter the time at which the sample was taken: ");
+				time = gUI_FrontEnd.getStringInput();
 
 				// if statements to create headers in case of dilutions
 				if (runs == 2) {
@@ -156,16 +156,16 @@ public class Header {
 
 			// if statements to create headers in case of dilutions
 			case 5:
-				gui.displayPrompt("\nIn-Vivo\n-------");
-				gui.displayPrompt("\nEnter the In-Vivo number: ");
+				gUI_FrontEnd.displayPrompt("\nIn-Vivo\n-------");
+				gUI_FrontEnd.displayPrompt("\nEnter the In-Vivo number: ");
 				do {
-					sample = gui.getStringInput();
+					sample = gUI_FrontEnd.getStringInput();
 					if (!isInt(sample)) {
-						gui.displayPrompt("\nInvalid Entry. \nEnter the In-Vivo number: ");
+						gUI_FrontEnd.displayPrompt("\nInvalid Entry. \nEnter the In-Vivo number: ");
 					}
 				} while (!isInt(sample));
-				gui.displayPrompt("\nEnter the time at which the sample was taken: ");
-				time = gui.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nEnter the time at which the sample was taken: ");
+				time = gUI_FrontEnd.getStringInput();
 				if (runs == 2) {
 					header1 = "In-Vivo #" + sample + " " + time + " " + hemo + " Run 1";
 					header2 = "In-Vivo #" + sample + " " + time + " " + hemo + " Run 2";
@@ -195,16 +195,16 @@ public class Header {
 
 			// if statements to create headers in case of dilutions
 			case 6:
-				gui.displayPrompt("\nSetpoint\n--------");
-				gui.displayPrompt("\nEnter the Setpoint number: ");
+				gUI_FrontEnd.displayPrompt("\nSetpoint\n--------");
+				gUI_FrontEnd.displayPrompt("\nEnter the Setpoint number: ");
 				do {
-					sample = gui.getStringInput();
+					sample = gUI_FrontEnd.getStringInput();
 					if (!isInt(sample)) {
-						gui.displayPrompt("\nInvalid Entry. \nEnter the Setpoint number: ");
+						gUI_FrontEnd.displayPrompt("\nInvalid Entry. \nEnter the Setpoint number: ");
 					}
 				} while (!isInt(sample));
-				gui.displayPrompt("\nEnter the time at which the sample was taken: ");
-				time = gui.getStringInput();
+				gUI_FrontEnd.displayPrompt("\nEnter the time at which the sample was taken: ");
+				time = gUI_FrontEnd.getStringInput();
 				if (runs == 2) {
 					header1 = "Setpoint #" + sample + " " + time + " " + hemo + " Run 1";
 					header2 = "Setpoint #" + sample + " " + time + " " + hemo + " Run 2";
@@ -237,26 +237,26 @@ public class Header {
 			// headerSend
 //			Driver.consoleSpacer(1);
 			if (runs == 2) {
-				gui.displayPrompt("\nHeader for run 1: " + header1);
-				gui.displayPrompt("\nHeader for run 2: " + header2);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 1: " + header1);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 2: " + header2);
 				GDP[0] = header1;
 				GDP[1] = header2;
 			}
 
 			else if (runs == 3) {
-				gui.displayPrompt("\nHeader for run with DF = 1: " + header1);
-				gui.displayPrompt("\nHeader for run 1 with DF = 2: " + header2);
-				gui.displayPrompt("\nHeader for run 2 with DF = 2: " + header3);
+				gUI_FrontEnd.displayPrompt("\nHeader for run with DF = 1: " + header1);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 1 with DF = 2: " + header2);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 2 with DF = 2: " + header3);
 				GDP[0] = header1;
 				GDP[1] = header2;
 				GDP[2] = header3;
 			}
 
 			else if (runs == 4) {
-				gui.displayPrompt("\nHeader for run with DF = 1: " + header1);
-				gui.displayPrompt("\nHeader for run with DF = 2: " + header2);
-				gui.displayPrompt("\nHeader for run 1 with DF = 4: " + header3);
-				gui.displayPrompt("\nHeader for run 2 with DF = 4: " + header4);
+				gUI_FrontEnd.displayPrompt("\nHeader for run with DF = 1: " + header1);
+				gUI_FrontEnd.displayPrompt("\nHeader for run with DF = 2: " + header2);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 1 with DF = 4: " + header3);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 2 with DF = 4: " + header4);
 				GDP[0] = header1;
 				GDP[1] = header2;
 				GDP[2] = header3;
@@ -264,11 +264,11 @@ public class Header {
 			}
 
 			else {
-				gui.displayPrompt("\nHeader for run with DF = 1: " + header1);
-				gui.displayPrompt("\nHeader for run with DF = 2: " + header2);
-				gui.displayPrompt("\nHeader for run with DF = 4: " + header3);
-				gui.displayPrompt("\nHeader for run 1 with DF = 8: " + header4);
-				gui.displayPrompt("\nHeader for run 2 with DF = 8: " + header5);
+				gUI_FrontEnd.displayPrompt("\nHeader for run with DF = 1: " + header1);
+				gUI_FrontEnd.displayPrompt("\nHeader for run with DF = 2: " + header2);
+				gUI_FrontEnd.displayPrompt("\nHeader for run with DF = 4: " + header3);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 1 with DF = 8: " + header4);
+				gUI_FrontEnd.displayPrompt("\nHeader for run 2 with DF = 8: " + header5);
 				GDP[0] = header1;
 				GDP[1] = header2;
 				GDP[2] = header3;
@@ -276,11 +276,11 @@ public class Header {
 				GDP[4] = header5;
 			}
 
-			gui.displayPrompt("\n\nIs the header information correct? Y/N  ");
+			gUI_FrontEnd.displayPrompt("\n\nIs the header information correct? Y/N  ");
 			do {
-				sentinel = gui.getStringInput();
+				sentinel = gUI_FrontEnd.getStringInput();
 				if (!Driver.verify(sentinel))
-					gui.displayPrompt("\nInvalid input. Enter Y or N");
+					gUI_FrontEnd.displayPrompt("\nInvalid input. Enter Y or N");
 			} while (!Driver.verify(sentinel));
 
 		} while (sentinel.equalsIgnoreCase("N"));
@@ -299,13 +299,13 @@ public class Header {
 	}
 
 	// display menu to gui text area
-	public static void menu(GUI gui) {
-		gui.displayPrompt("\n");
-		gui.displayPrompt("\n                       Header Generation                              ");
-		gui.displayPrompt("\n----------------------------------------------------------------------");
-		gui.displayPrompt("\n1 = Blood Preparation (whole blood)\t 2 = Blood Preparation (plasma)"
+	public static void menu(GUI_FrontEnd gUI_FrontEnd) {
+		gUI_FrontEnd.displayPrompt("\n");
+		gUI_FrontEnd.displayPrompt("\n                       Header Generation                              ");
+		gUI_FrontEnd.displayPrompt("\n----------------------------------------------------------------------");
+		gUI_FrontEnd.displayPrompt("\n1 = Blood Preparation (whole blood)\t 2 = Blood Preparation (plasma)"
 				+ "\n3 = Initial Hemolysis\t\t" + " 4 = Sample\n" + "5 = In-Vivo\t\t\t 6 = Setpoint");
-		gui.displayPrompt("\n\nAre these results for blood preparation, sample, setpoint, or In-Vivo? ");
+		gUI_FrontEnd.displayPrompt("\n\nAre these results for blood preparation, sample, setpoint, or In-Vivo? ");
 	}
 
 }

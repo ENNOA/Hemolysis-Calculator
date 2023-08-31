@@ -10,7 +10,7 @@
  * generation.
  */
 
-package hemolysis_V4;
+package hemolysis_V5;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class Collector {
 
-	public static void switcher(int runs, String select[], String specTitle[], int DF, GUI gui)
+	public static void switcher(int runs, String select[], String specTitle[], int DF, GUI_FrontEnd gUI_FrontEnd)
 			throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		// Variables and declarations
 		String[] results = null;
@@ -63,7 +63,7 @@ public class Collector {
 			results = results(hemoLow1, hemoHigh1, hemoLow2, hemoHigh2, DF);
 
 			// fills array elements with Stringbuilders for sending to PdfGenerator
-			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gui);
+			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gUI_FrontEnd);
 			break;
 
 		case 3:
@@ -84,7 +84,7 @@ public class Collector {
 			results = results(hemoLow1, hemoHigh1, hemoLow2, hemoHigh2, DF);
 
 			// send to PdfGenerator for printing
-			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gui);
+			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gUI_FrontEnd);
 			break;
 
 		case 4:
@@ -107,7 +107,7 @@ public class Collector {
 			results = results(hemoLow1, hemoHigh1, hemoLow2, hemoHigh2, DF);
 
 			// send to PdfGenerator for printing
-			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gui);
+			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gUI_FrontEnd);
 			break;
 
 		case 5:
@@ -132,7 +132,7 @@ public class Collector {
 			results = results(hemoLow1, hemoHigh1, hemoLow2, hemoHigh2, DF);
 
 			// send to PdfGenerator for printing
-			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gui);
+			PdfGenerator.GeneratePDF(specTitle, ListOfRecords, results, runs, gUI_FrontEnd);
 			break;
 		}
 	}

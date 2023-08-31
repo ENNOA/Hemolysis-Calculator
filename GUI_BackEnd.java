@@ -22,21 +22,22 @@ import java.util.InputMismatchException;
 
 import javax.swing.SwingUtilities;
 
-public class Driver {
+public class GUI_BackEnd {
 	static GUI_FrontEnd gUI_FrontEnd = new GUI_FrontEnd();
 	static String DIRECTORY = System.getProperty("user.dir");
+	static boolean continueInput = true;
+	static int DF = 1;
+	static int runs = 0;
+	static int sample = 0;
+	static String[] specTitle = null;
+	static String sentinel = null;
+	static String[] select = new String[5];
 
 	public static void main(String[] args) throws UnsupportedEncodingException, IOException {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				boolean continueInput = true;
-				int DF = 1;
-				int runs = 0;
-				int sample = 0;
-				String[] specTitle = null;
-				String sentinel = null;
-				String[] select = new String[5];
+				
 
 				// program begins
 				gUI_FrontEnd.displayPrompt("---------------------------------------------------------------------\n");
@@ -47,59 +48,45 @@ public class Driver {
 						// ensures user inputs an integer
 						try {
 							gUI_FrontEnd.displayPrompt("\nEnter the number of files to parse: ");
-							runs = gUI_FrontEnd.getIntegerInput();
-							continueInput = false;
+							setRuns(gUI_FrontEnd.getIntegerInput());
+							setContinueInput(false);
 						} catch (InputMismatchException ex) {
-							gUI_FrontEnd.displayPrompt("\n Input must be an whole number.");
-							gUI_FrontEnd.getTextArea().repaint();
+
 						} catch (NumberFormatException e1) {
+
+						} finally {
 							gUI_FrontEnd.displayPrompt("\n Input must be an whole number.");
 							gUI_FrontEnd.getTextArea().repaint();
 						}
-					} while (continueInput);
-					continueInput=true;//reset continueInput
+						
+					} while (isContinueInput());
+					setContinueInput(true);//reset continueInput
 
 					// checks if runs>2 and ensures an integer is entered
-					if (runs < 2 || runs > 5) {
+					if (getRuns() < 2 || getRuns() > 5) {
 						do {
 							try {
 								gUI_FrontEnd.displayPrompt(
 										"\nMust enter at least 2 files, or no more than 5 files.\n\nEnter the number of files to parse: ");
-								runs = 0;
-								runs = gUI_FrontEnd.getIntegerInput();
-								continueInput = false;
+								setRuns(0);
+								setRuns(gUI_FrontEnd.getIntegerInput());
+								setContinueInput(false);
 							} catch (InputMismatchException ex) {
+								
+							} catch (NumberFormatException e1) {
+
+							}
+							finally {
 								gUI_FrontEnd.displayPrompt("\nTry again. Input must be an whole number.");
 								gUI_FrontEnd.getTextArea().repaint();
-							} catch (NumberFormatException e1) {
-								gUI_FrontEnd.displayPrompt("\n Input must be an whole number.");
-								gUI_FrontEnd.getTextArea().repaint();
 							}
-						} while (runs < 2 || runs > 5);
+						} while (getRuns() < 2 || getRuns() > 5);
 					}
 
 					// ensures an integer is entered
 					do {
-						gUI_FrontEnd.displayPrompt("\nDilution Factor should be 1, 2, 4, or 8.");
-						gUI_FrontEnd.displayPrompt("\nEnter the Dilution Factor: ");
-						try {
-							DF = gUI_FrontEnd.getIntegerInput();
-							if (DF != 1 && DF != 2 && DF != 4 && DF != 8) {
-								do {
-									gUI_FrontEnd.displayPrompt("\nTry again. Dilution Factor needs to be 1, 2, 4, or 8\n");
-									DF = gUI_FrontEnd.getIntegerInput();
-								} while (DF != 1 && DF != 2 && DF != 4 && DF != 8);
-							}
-							continueInput = false;
-						} catch (InputMismatchException ex) {
-							gUI_FrontEnd.displayPrompt("\nInput Mistmatch. Input must be an whole number.");
-							gUI_FrontEnd.getTextArea().repaint();
-
-						} catch (NumberFormatException e1) {
-							gUI_FrontEnd.displayPrompt("\n Number Format. Input must be an whole number.");
-							gUI_FrontEnd.getTextArea().repaint();
-						}
-					} while (continueInput);
+						dilutionFactor(getDF(), isContinueInput());
+					} while (isContinueInput());
 					consoleSpacer(1);
 
 					// file name entry. user will enter two file names each will be saved to a
@@ -107,44 +94,13 @@ public class Driver {
 
 					// loop to display files in directory and assign them to an array
 					do {
-						gUI_FrontEnd.displayPrompt("\n\n\t File name selection\n\t--------------------------\n");
-						File[] library = Files();
-						continueInput = false;
-						gUI_FrontEnd.displayPrompt("\n\nEnter the number of the first file to be parsed: ");
-						while (!continueInput) {
-							try {
-								for (int i = 0; i < runs; i++) {
-									sample = (gUI_FrontEnd.getIntegerInput()) - 1;
-									gUI_FrontEnd.displayPrompt("\nrun " + (i + 1) + " = " + library[sample].getName() + "\n");
-									select[i] = library[sample].getName();
-									if (i != (runs - 1))
-										gUI_FrontEnd.displayPrompt("\nEnter the number of the next file to be parsed: ");
-								}
-								continueInput = true;
-							} catch (Exception ex) {
-								gUI_FrontEnd.displayPrompt(
-										"\nInvalid Entry. Re-enter the number of the first file to be parsed: ");
-							}
-						}
-
-						consoleSpacer(1);
-
-						for (int i = 0; i < select.length; i++) {
-							if (select[i] != null)
-								gUI_FrontEnd.displayPrompt((i + 1) + ") " + select[i] + "\n");
-						}
-
-						gUI_FrontEnd.displayPrompt("\nIs this correct? Y/N: ");
-						do {
-							sentinel = gUI_FrontEnd.getStringInput();
-							if (!verify(sentinel))
-								gUI_FrontEnd.displayPrompt("\nInvalid input. Enter Y or N");
-						} while (!verify(sentinel));
+						fileSelection();
 
 					} while (sentinel.equalsIgnoreCase("N"));
 
-					// runs class to generate header information
-					specTitle = Header.header(DF, runs, gUI_FrontEnd);
+					// getRuns() class to generate header information
+					String[] temp= Header.header(getDF(), getRuns(), gUI_FrontEnd);
+					setSpecTitle(temp);
 					consoleSpacer(1);
 
 					gUI_FrontEnd.displayPrompt("\nParsing...");
@@ -152,7 +108,7 @@ public class Driver {
 					// catch filenotfoundexception due the the PDF being open
 					do {
 						try {
-							Collector.switcher(runs, select, specTitle, DF, gUI_FrontEnd);
+							Collector.switcher(getRuns(), select, specTitle, getDF(), gUI_FrontEnd);
 						} catch (NullPointerException e) {
 							gUI_FrontEnd.displayPrompt("\n\n"+e+"\n\nNull Pointer Exception:Cannot read the array length because \"a\" is null. Type HALP to call for help!");
 							sentinel = gUI_FrontEnd.getStringInput();
@@ -178,13 +134,68 @@ public class Driver {
 			}
 		});
 	}
+	
+	public static void dilutionFactor(int DF, boolean continueInput) {
+		gUI_FrontEnd.displayPrompt("\nDilution Factor should be 1, 2, 4, or 8.");
+		gUI_FrontEnd.displayPrompt("\nEnter the Dilution Factor: ");
+		try {
+			setDF(gUI_FrontEnd.getIntegerInput());
+			if (getDF() != 1 && getDF() != 2 && getDF() != 4 && getDF() != 8) {
+				do {
+					gUI_FrontEnd.displayPrompt("\nTry again. Dilution Factor needs to be 1, 2, 4, or 8\n");
+					setDF ( gUI_FrontEnd.getIntegerInput());
+				} while (getDF() != 1 && getDF() != 2 && getDF() != 4 && getDF() != 8);
+			}
+			setContinueInput (false);
+		} catch (InputMismatchException ex) {
+			gUI_FrontEnd.displayPrompt("\nInput Mismatch. Input must be an whole number.");
+		} catch (NumberFormatException e1) {
+			gUI_FrontEnd.displayPrompt("\n Number Format. Input must be an whole number.");
+		} finally {
+			gUI_FrontEnd.getTextArea().repaint();
+		}
+	}
+	
+	public static void fileSelection() {
+		gUI_FrontEnd.displayPrompt("\n\n\t File name selection\n\t--------------------------\n");
+		File[] library = Files();
+		setContinueInput ( false);
+		gUI_FrontEnd.displayPrompt("\n\nEnter the number of the first file to be parsed: ");
+		while (!isContinueInput()) {
+			try {
+				for (int i = 0; i < getRuns(); i++) {
+					setSample ( (gUI_FrontEnd.getIntegerInput()) - 1);
+					gUI_FrontEnd.displayPrompt("\nrun " + (i + 1) + " = " + library[sample].getName() + "\n");
+					select[i] = library[getSample()].getName();
+					if (i != (getRuns() - 1))
+						gUI_FrontEnd.displayPrompt("\nEnter the number of the next file to be parsed: ");
+				}
+				setContinueInput(true);
+			} catch (Exception ex) {
+				gUI_FrontEnd.displayPrompt(
+						"\nInvalid Entry. Re-enter the number of the first file to be parsed: ");
+			}
+		}
+
+		for (int i = 0; i < select.length; i++) {
+			if (select[i] != null)
+				gUI_FrontEnd.displayPrompt((i + 1) + ") " + select[i] + "\n");
+		}
+
+		gUI_FrontEnd.displayPrompt("\nIs this correct? Y/N: ");
+		do {
+			sentinel = gUI_FrontEnd.getStringInput();
+			if (!verify(sentinel))
+				gUI_FrontEnd.displayPrompt("\nInvalid input. Enter Y or N");
+		} while (!verify(sentinel));
+	}
 
 	/*
 	 * method to display which files are in the folder and ready to be parsed
 	 * filters out non .csv files, lists them in order of last modified and lists
 	 * files in 3 columns
 	 */
-	public static File[] Files() {
+ 	public static File[] Files() {
 		File WLData = new File(DIRECTORY);
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
@@ -238,6 +249,62 @@ public class Driver {
 		else if (sentinel.equalsIgnoreCase("n"))
 			return true;
 		return false;
+	}
+
+	public static boolean isContinueInput() {
+		return continueInput;
+	}
+
+	public static void setContinueInput(boolean continueInput) {
+		GUI_BackEnd.continueInput = continueInput;
+	}
+
+	public static int getDF() {
+		return DF;
+	}
+
+	public static void setDF(int dF) {
+		DF = dF;
+	}
+
+	public static int getRuns() {
+		return runs;
+	}
+
+	public static void setRuns(int runs) {
+		GUI_BackEnd.runs = runs;
+	}
+
+	public static int getSample() {
+		return sample;
+	}
+
+	public static void setSample(int sample) {
+		GUI_BackEnd.sample = sample;
+	}
+
+	public static String[] getSpecTitle() {
+		return specTitle;
+	}
+
+	public static void setSpecTitle(String[] specTitle) {
+		GUI_BackEnd.specTitle = specTitle;
+	}
+
+	public static String getSentinel() {
+		return sentinel;
+	}
+
+	public static void setSentinel(String sentinel) {
+		GUI_BackEnd.sentinel = sentinel;
+	}
+
+	public static String[] getSelect() {
+		return select;
+	}
+
+	public static void setSelect(String[] select) {
+		GUI_BackEnd.select = select;
 	}
 
 }

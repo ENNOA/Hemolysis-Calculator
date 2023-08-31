@@ -9,7 +9,7 @@
  * Fixed Null Pointer Exception by ensuring  that if a folder is not found, it is created.
  */
 
-package hemolysis_V4;
+package hemolysis_V5;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -76,11 +76,11 @@ public class PdfGenerator {
 
 	// This must be here for the program to work
 	@SuppressWarnings("unused")
-	private GUI gui;
+	private GUI_FrontEnd gUI_FrontEnd;
 
 	//Constructor  to initialize pdfGenerator  with reference to gui
-	public PdfGenerator(GUI gui) {
-		this.gui = gui;
+	public PdfGenerator(GUI_FrontEnd gUI_FrontEnd) {
+		this.gUI_FrontEnd = gUI_FrontEnd;
 	}
 
 	// creates new font objects for each loop of the program
@@ -95,7 +95,7 @@ public class PdfGenerator {
 	}
 
 	// method to create and populate pdf
-	public static void GeneratePDF(String[] GDP, List<List<List<String>>> records, String[] results, int runs, GUI gui)
+	public static void GeneratePDF(String[] GDP, List<List<List<String>>> records, String[] results, int runs, GUI_FrontEnd gUI_FrontEnd)
 			throws IOException {
 		setPdfGenerator();
 		file = new File(LOCATION, fileName);
@@ -201,7 +201,7 @@ public class PdfGenerator {
 
 		document.close();
 
-		gui.displayPrompt("\nCreating PDF file named " + fileName + "...");
+		gUI_FrontEnd.displayPrompt("\nCreating PDF file named " + fileName + "...");
 
 		try {
 			Thread.sleep(500);
@@ -209,8 +209,8 @@ public class PdfGenerator {
 			e.printStackTrace();
 		}
 
-		gui.displayPrompt("\n\nDone.\n");
-		gui.displayPrompt(fileName + " can be found in " + LOCATION + "\\hemolysis results.\n");
+		gUI_FrontEnd.displayPrompt("\n\nDone.\n");
+		gUI_FrontEnd.displayPrompt(fileName + " can be found in " + LOCATION + "\\hemolysis results.\n");
 	}
 
 	/*

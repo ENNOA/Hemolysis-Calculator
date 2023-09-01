@@ -75,8 +75,8 @@ public class GUI_FrontEnd {
 	}
 
 	// returns Integer from user input
-	public int getIntegerInput() {
-		String input = getUserInput();
+	public int getIntegerInput(int type) {
+		String input = getUserInput(type);
 		if (input.equals("")) {
 			DontCallMeShirley();
 		}
@@ -133,8 +133,8 @@ public class GUI_FrontEnd {
 	 * Modify method to use generics so it accepts both integers and strings
 	 * 
 	 */
-	public String getStringInput() {
-		String input = getUserInput();
+	public String getStringInput(int type) {
+		String input = getUserInput(type);
 		if (input.equals("")) {
 			DontCallMeShirley();
 		} else if (input.equals(null)) {
@@ -148,8 +148,14 @@ public class GUI_FrontEnd {
 	/*
 	 * Change method to take a value if value==0 "Enter an integer" if value==1"Enter a String"
 	 */
-	public String getUserInput() {
-		JOptionPane optionPane = new JOptionPane("Enter an integer", JOptionPane.PLAIN_MESSAGE,
+	public String getUserInput(int type) {
+		String prompt;
+		if(type==0)
+			prompt="Enter an Integer";
+		else
+			prompt="Enter a character";
+				
+		JOptionPane optionPane = new JOptionPane(prompt, JOptionPane.PLAIN_MESSAGE,
 				JOptionPane.DEFAULT_OPTION, null, null);
 		optionPane.setWantsInput(true);
 		JDialog dialog = optionPane.createDialog(null, "Input");

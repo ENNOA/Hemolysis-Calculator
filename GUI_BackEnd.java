@@ -48,7 +48,7 @@ public class GUI_BackEnd {
 						// ensures user inputs an integer
 						try {
 							gUI_FrontEnd.displayPrompt("\nEnter the number of files to parse: ");
-							setRuns(gUI_FrontEnd.getIntegerInput());
+							setRuns(gUI_FrontEnd.getIntegerInput(1));
 							setContinueInput(false);
 						} catch (InputMismatchException ex) {
 
@@ -69,7 +69,7 @@ public class GUI_BackEnd {
 								gUI_FrontEnd.displayPrompt(
 										"\nMust enter at least 2 files, or no more than 5 files.\n\nEnter the number of files to parse: ");
 								setRuns(0);
-								setRuns(gUI_FrontEnd.getIntegerInput());
+								setRuns(gUI_FrontEnd.getIntegerInput(1));
 								setContinueInput(false);
 							} catch (InputMismatchException ex) {
 								
@@ -139,11 +139,11 @@ public class GUI_BackEnd {
 		gUI_FrontEnd.displayPrompt("\nDilution Factor should be 1, 2, 4, or 8.");
 		gUI_FrontEnd.displayPrompt("\nEnter the Dilution Factor: ");
 		try {
-			setDF(gUI_FrontEnd.getIntegerInput());
+			setDF(gUI_FrontEnd.getIntegerInput(1));
 			if (getDF() != 1 && getDF() != 2 && getDF() != 4 && getDF() != 8) {
 				do {
 					gUI_FrontEnd.displayPrompt("\nTry again. Dilution Factor needs to be 1, 2, 4, or 8\n");
-					setDF ( gUI_FrontEnd.getIntegerInput());
+					setDF ( gUI_FrontEnd.getIntegerInput(1));
 				} while (getDF() != 1 && getDF() != 2 && getDF() != 4 && getDF() != 8);
 			}
 			setContinueInput (false);
@@ -164,7 +164,7 @@ public class GUI_BackEnd {
 		while (!isContinueInput()) {
 			try {
 				for (int i = 0; i < getRuns(); i++) {
-					setSample ( (gUI_FrontEnd.getIntegerInput()) - 1);
+					setSample ( (gUI_FrontEnd.getIntegerInput(1)) - 1);
 					gUI_FrontEnd.displayPrompt("\nrun " + (i + 1) + " = " + library[sample].getName() + "\n");
 					select[i] = library[getSample()].getName();
 					if (i != (getRuns() - 1))
